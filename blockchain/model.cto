@@ -1,0 +1,53 @@
+/**
+ * My commodity trading network
+ */
+namespace org.example.mynetwork
+
+// ENUMS
+enum AppraisalStatus{
+  o NONE
+  o INITIATED
+  o APPROVED_IO
+  o REJECTED_IO
+  o REAPPROVED_RATEE
+  o REJECTED_RATEE
+  o APPROVED_RO
+  o REJECTED_RO
+  o APPROVED_SRO
+  o REJECTED_SRO
+  o APPROVED_AO
+  o REJECTED_AO
+}
+
+enum OfficerDesignation{
+  o RATEE
+  o IO
+  o RO
+  o SRO
+  o AO
+}
+
+asset Appraisal identified by AppID {
+    o String AppID
+    o String description
+    o Double quantity
+	o AppraisalStatus status
+    o String RateeID
+    o String IOId
+    o String ROId
+    o String AOId
+    o String SROId
+    --> Officer officer
+}
+
+participant Officer identified by officerId {
+    o String officerId
+    o OfficerDesignation designation
+    o String firstName
+    o String lastName
+}
+
+transaction Approve {
+    --> Appraisal appraisal
+    --> Officer newOfficer
+}
