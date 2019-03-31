@@ -1,7 +1,7 @@
 /**
  * My commodity trading network
  */
-namespace org.example.mynetwork
+namespace org.army
 
 // ENUMS
 enum AppraisalStatus{
@@ -20,6 +20,7 @@ enum AppraisalStatus{
 }
 
 enum OfficerDesignation{
+  o CLERK
   o RATEE
   o IO
   o RO
@@ -30,13 +31,13 @@ enum OfficerDesignation{
 asset Appraisal identified by AppID {
   o String AppID
   o String description
-  o Double quantity
   o AppraisalStatus status
-  o String RateeID
+  o String RateeId
   o String IOId
   o String ROId
   o String SROId
   o String AOId
+  o String Clerk
   --> Officer officer
 }
 
@@ -58,18 +59,27 @@ participant Admin identified by adminId {
   o String lastName
 }
 
-participant Clerk identified by clerkId {
-  o String clerkId
-  o String firstName
-  o String lastName
-}
-
 transaction Approve {
   --> Appraisal appraisal
   --> Officer newOfficer
 }
 
+transaction Reject {
+  --> Appraisal appraisal
+  --> Officer newOfficer
+}
+
+transaction ViewStatus {
+  --> Appraisal appraisal
+  --> Officer officer
+}
+
 transaction MarkAttendance {
+  --> Attendance attendance
+  --> Officer officer
+}
+
+transaction ViewAttendance {
   --> Attendance attendance
   --> Officer officer
 }

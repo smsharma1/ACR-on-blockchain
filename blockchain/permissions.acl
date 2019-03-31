@@ -4,7 +4,7 @@
 
 rule NetworkControlPermission {
   description:  "Admin can access network commands"
-  participant: "org.example.mynetwork.Admin"
+  participant: "org.army.Admin"
   operation: ALL
   resource: "org.hyperledger.composer.system.Network"
   action: ALLOW
@@ -12,20 +12,47 @@ rule NetworkControlPermission {
 
 rule MarkAttendance {
     description: "Allow the clerk to mark attendance of an officer"
-    participant: "org.example.mynetwork.Clerk"
+    participant (officer) : "org.army.Officer"
     operation: ALL
-    resource: "org.example.mynetwork.Attendance"
+    resource: "org.army.Attendance"
+    condition: (officer.designation === 'CLERK')
     action: ALLOW
 }
 
-rule ApprisalAccess {
+// access to ratee
+rule AppAccessOfficer {
     description: "Control access of apprisal"
-    participant(officer): "org.example.mynetwork.Officer"
-    operation: ALL
-    resource(app): "org.example.mynetwork.Appraisal"
-    condition: (app.RateeID == officer.OfficerId)
+    participant(officer): "org.army.Officer"
+    operation: READ, CREATE, UPDATE
+    resource(app): "org.army.Appraisal"
+    transaction(tx): "org.army.Approve"
+    condition: (app.officer.OfficerId === officer.OfficerId)
     action: ALLOW
 }
+
+// visibility of officers
+rule OfficerVisibility{
+  	description: "Control visibility of officers"
+    participant(officer): "org.army.Officer"
+    operation: READ
+    resource(app): "org.army.Officer"
+  	condition: ("one" == "one")
+    action: ALLOW
+}
+
+rule CreateApproveTransaction {
+    description: "Control access of apprisal"
+    participant(officer): "org.army.Officer"
+    operation: CREATE
+    resource(app): "org.army.Approve"
+  	condition: ("one" == "one")
+    action: ALLOW
+}
+
+
+
+
+
 
 // rule SystemACL {
 //   description:  "System ACL to permit all access"
