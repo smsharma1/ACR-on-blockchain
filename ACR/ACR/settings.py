@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ACRBlockchain.apps.AcrblockchainConfig',
 ]
 
 MIDDLEWARE = [
@@ -118,4 +119,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-LOGIN_REDIRECT_URL = '/'
+# LOGIN_REDIRECT_URL = '/acrblockchain/home'
+AUTH_USER_MODEL = 'ACRBlockchain.CustomUser'
+LOGIN_REDIRECT_URL = '/acrblockchain/home'
+LOGOUT_REDIRECT_URL = 'home'
