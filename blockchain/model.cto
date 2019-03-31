@@ -28,26 +28,48 @@ enum OfficerDesignation{
 }
 
 asset Appraisal identified by AppID {
-    o String AppID
-    o String description
-    o Double quantity
-	o AppraisalStatus status
-    o String RateeID
-    o String IOId
-    o String ROId
-    o String AOId
-    o String SROId
-    --> Officer officer
+  o String AppID
+  o String description
+  o Double quantity
+  o AppraisalStatus status
+  o String RateeID
+  o String IOId
+  o String ROId
+  o String SROId
+  o String AOId
+  --> Officer officer
+}
+
+asset Attendance identified by OfficerId {
+  o String OfficerId
+  o Integer attendance
 }
 
 participant Officer identified by officerId {
-    o String officerId
-    o OfficerDesignation designation
-    o String firstName
-    o String lastName
+  o String officerId
+  o OfficerDesignation designation
+  o String firstName
+  o String lastName
+}
+
+participant Admin identified by adminId {
+  o String adminId
+  o String firstName
+  o String lastName
+}
+
+participant Clerk identified by clerkId {
+  o String clerkId
+  o String firstName
+  o String lastName
 }
 
 transaction Approve {
-    --> Appraisal appraisal
-    --> Officer newOfficer
+  --> Appraisal appraisal
+  --> Officer newOfficer
+}
+
+transaction MarkAttendance {
+  --> Attendance attendance
+  --> Officer officer
 }
