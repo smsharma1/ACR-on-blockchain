@@ -2,6 +2,31 @@
  * Sample access control list.
  */
 
+rule NetworkControlPermission {
+  description:  "Admin can access network commands"
+  participant: "org.example.mynetwork.Admin"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.Network"
+  action: ALLOW
+}
+
+rule MarkAttendance {
+    description: "Allow the clerk to mark attendance of an officer"
+    participant: "org.example.mynetwork.Clerk"
+    operation: ALL
+    resource: "org.example.mynetwork.Attendance"
+    action: ALLOW
+}
+
+rule ApprisalAccess {
+    description: "Control access of apprisal"
+    participant(officer): "org.example.mynetwork.Officer"
+    operation: ALL
+    resource(app): "org.example.mynetwork.Appraisal"
+    condition: (app.RateeID == officer.OfficerId)
+    action: ALLOW
+}
+
 // rule SystemACL {
 //   description:  "System ACL to permit all access"
 //   participant: "org.hyperledger.composer.system.Participant"

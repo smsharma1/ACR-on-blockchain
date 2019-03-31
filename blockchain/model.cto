@@ -45,8 +45,8 @@ asset Attendance identified by OfficerId {
   o Integer attendance
 }
 
-participant Officer identified by officerId {
-  o String officerId
+participant Officer identified by OfficerId {
+  o String OfficerId
   o OfficerDesignation designation
   o String firstName
   o String lastName
