@@ -8,15 +8,10 @@ enum AppraisalStatus{
   o NONE
   o INITIATED
   o APPROVED_IO
-  o REJECTED_IO
   o REAPPROVED_RATEE
-  o REJECTED_RATEE
   o APPROVED_RO
-  o REJECTED_RO
   o APPROVED_SRO
-  o REJECTED_SRO
   o APPROVED_AO
-  o REJECTED_AO
 }
 
 enum OfficerDesignation{
@@ -37,13 +32,22 @@ asset Appraisal identified by AppID {
   o String ROId
   o String SROId
   o String AOId
-  o String Clerk
+  o String ClerkId
   --> Officer officer
 }
 
 asset Attendance identified by OfficerId {
   o String OfficerId
+  o String ClerkId
   o Integer attendance
+  o DateTime currentdate
+}
+
+asset LeaveRecord identified by leaveId {
+  o String leaveId //This leaveId is to be stored in database for reference
+  o DateTime from
+  o DateTime to
+  --> Officer officer
 }
 
 participant Officer identified by OfficerId {
@@ -58,22 +62,29 @@ transaction Approve {
   --> Officer newOfficer
 }
 
-transaction Reject {
-  --> Appraisal appraisal
-  --> Officer newOfficer
-}
-
 transaction MarkAttendance {
   --> Attendance attendance
-  --> Officer officer
+  --> Officer officer //Not Required
 }
 
+transaction MarkLeave {
+  --> LeaveRecord leave
+  --> Officer officer
+}
 
 // not a transaction since no state will change, will address in query
 // transaction ViewStatus {
 //   --> Appraisal appraisal
 //   --> Officer officer
 // }
+
+
+@returns(AppraisalStatus)
+transaction ViewStatus {
+  --> Appraisal appraisal
+  --> Officer officer
+}
+
 
 // not a transaction since no state will change, will address in query
 // transaction ViewAttendance {

@@ -1,0 +1,22 @@
+{
+  "$class": "org.army.Appraisal",
+  "AppID": "0001",
+  "description": "ratee one",
+  "status": "NONE",
+  "RateeId": "0101",
+  "IOId": "0201",
+  "ROId": "0301",
+  "SROId": "0401",
+  "AOId": "0501",
+  "ClerkId": "0001",
+  "officer": "resource:org.army.Officer#0101"
+}
+
+
+{
+    "$class": "org.army.Attendance",
+    "OfficerId": "0101",
+    "ClerkId": "0001",
+    "attendance": 0,
+    "currentdate": "2019-03-31T19:42:39.096Z"
+  }

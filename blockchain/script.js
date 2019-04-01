@@ -10,7 +10,7 @@ async function Approve(trans) {
         trans.appraisal.status = 'INITIATED'
         flag = 1
     }
-    else if ((trans.appraisal.status === 'INITIATED' || trans.appraisal.status === 'REJECTED_RO' || trans.appraisal.status === "REJECTED_RATEE" ) && trans.appraisal.RateeId === trans.newOfficer.OfficerId){
+    else if (trans.appraisal.status === 'INITIATED' && trans.appraisal.RateeId === trans.newOfficer.OfficerId){
         trans.appraisal.officer = trans.newOfficer
         trans.appraisal.status = 'APPROVED_IO'
         flag = 1
@@ -20,12 +20,12 @@ async function Approve(trans) {
         trans.appraisal.status = 'REAPPROVED_RATEE'
         flag = 1
     }
-    else if ((trans.appraisal.status === 'REAPPROVED_RATEE' || trans.appraisal.status === 'REJECTED_SRO') && trans.appraisal.SROId === trans.newOfficer.OfficerId){
+    else if (trans.appraisal.status === 'REAPPROVED_RATEE' && trans.appraisal.SROId === trans.newOfficer.OfficerId){
         trans.appraisal.officer = trans.newOfficer
         trans.appraisal.status = 'APPROVED_RO'
         flag = 1
     }
-    else if ((trans.appraisal.status === 'APPROVED_RO' || trans.appraisal.status === 'REJECTED_AO') && trans.appraisal.AOId === trans.newOfficer.OfficerId){
+    else if (trans.appraisal.status === 'APPROVED_RO' && trans.appraisal.AOId === trans.newOfficer.OfficerId){
         trans.appraisal.officer = trans.newOfficer
         trans.appraisal.status = 'APPROVED_SRO'
         flag = 1
@@ -40,38 +40,11 @@ async function Approve(trans) {
         let assetRegistry = await getAssetRegistry('org.army.Appraisal');
         await assetRegistry.update(trans.appraisal);
     }
+    else{
+        throw new Error("Invalid transaction")
+    }
 }
 
-/**
- * Do a rejection
- * @param {org.army.Reject} RejectAppraisal 
- * @transaction
- */
-async function Reject(trans) {
-    if (trans.appraisal.status === 'INITIATED' && trans.appraisal.RateeId === trans.newOfficer.OfficerId){
-        trans.appraisal.officer = trans.newOfficer
-        trans.appraisal.status = 'REJECTED_IO'
-    } 
-    else if (trans.appraisal.status === 'APPROVED_IO' && trans.appraisal.IOId === trans.newOfficer.OfficerId){
-        trans.appraisal.officer = trans.newOfficer
-        trans.appraisal.status = 'REJECTED_RATEE'
-    }
-    else if (trans.appraisal.status === 'REAPPROVED_RATEE' && trans.appraisal.IOId === trans.newOfficer.OfficerId){
-        trans.appraisal.officer = trans.newOfficer
-        trans.appraisal.status = 'REJECTED_RO'
-    }
-    else if (trans.appraisal.status === 'APPROVED_RO' && trans.appraisal.ROId === trans.newOfficer.OfficerId){
-        trans.appraisal.officer = trans.newOfficer
-        trans.appraisal.status = 'REJECTED_SRO'
-    }
-    else if (trans.appraisal.status === 'APPROVED_SRO' && trans.appraisal.SROId === trans.newOfficer.OfficerId){
-        trans.appraisal.officer = trans.newOfficer
-        trans.appraisal.status = 'REJECTED_AO'
-    }
-      
-    let assetRegistry = await getAssetRegistry('org.army.Appraisal');
-    await assetRegistry.update(trans.appraisal);
-}
 
 /**
  * Mark attendance
@@ -79,9 +52,52 @@ async function Reject(trans) {
  * @transaction
  */
 async function MarkAttendance(trans) {
-    trans.attendance.attendance += 1
-    let assetRegistry = await getAssetRegistry('org.army.Attendance');
-    await assetRegistry.update(trans.attendance);
+    var now = new Date()
+    // to compare current date with today's date
+    // avoid double attendance
+    console.log(now)
+    nowDate = now.setHours(0,0,0,0)
+    console.log(nowDate)
+    lastDate = new Date(trans.attendance.currentdate)
+    console.log(lastDate)
+    lastDate = lastDate.setHours(0,0.0,0)
+    console.log(lastDate)
+    if (lastDate < nowDate) {
+        trans.attendance.attendance += 1
+        trans.attendance.currentdate = now
+        let assetRegistry = await getAssetRegistry('org.army.Attendance');
+        await assetRegistry.update(trans.attendance);
+    }
+    else{
+        throw new Error("Invalid transaction");
+    }
+
 }
-  
+
+/**
+ * Mark Leave
+ * @param {org.army.MarkLeave} MarkLeave
+ * @transaction
+ */
+async function MarkLeave(trans) {
+    var now = new Date()
+    // need to stop backdate leaves
+    if ((trans.to > trans.from) && (trans.from > now.toDateString())) {        
+        let assetRegistry = await getAssetRegistry('org.army.LeaveRecord');
+        await assetRegistry.update(trans.leave);
+    }
+    else{
+        throw new Error("Invalid transaction");
+    }
+}
+
+
+// /**
+//  * Returns Status
+//  * @param {org.army.ViewStatus} ReturnsStatusOfAppraisal 
+//  * @transaction
+//  */
+// No need to implement, officer already has direct read access to his complete appraisal
+// async function ViewStatus(trans){
+// }
   

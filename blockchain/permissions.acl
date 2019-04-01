@@ -44,6 +44,24 @@ rule SystemACL {
   action: ALLOW
 }
 
+rule ClerkAddAppraisal {
+  description:  "System ACL to permit all access"
+  participant(p): "org.army.Officer"
+  operation: CREATE
+  resource(r): "org.hyperledger.composer.system.AddAsset"
+  condition: (p.designation === "CLERK")
+  action: ALLOW
+}
+
+rule ClerkAddAppraisalTransaction {
+  description:  "System ACL to permit all access"
+  participant(p): "org.army.Officer"
+  operation: CREATE
+  resource(r): "org.army.Appraisal"
+  condition: (p.designation === "CLERK")
+  action: ALLOW
+}
+
 // create access of HistorianRecords to all the officers
 rule CreateHistorianRecord {
   description:  "Any officer can create their designated transaction record"
@@ -73,13 +91,14 @@ rule CreateMarkAttendanceTransaction {
   action: ALLOW
 }
 
-// update attendance by cleark
+// update attendance by clerk
 rule UpdateAttendance {
   description: "Only clerk can update attendance"
   participant(p): "org.army.Officer"
   operation: UPDATE, READ
   resource(r): "org.army.Attendance"
-  condition: (p.designation === 'CLERK')
+  transaction(tx): "org.army.MarkAttendance"
+  condition: (p.designation === 'CLERK' && p.OfficerId === r.ClerkId)
   action: ALLOW
 }
 
@@ -109,7 +128,7 @@ rule ViewApprisalIO {
   participant (officer) : "org.army.Officer"
   operation: READ
   resource (a) : "org.army.Appraisal"
-  condition: (officer.OfficerId === a.IOId && a.status != 'APPROVED_AO')
+  condition: (officer.OfficerId === a.IOId)
   action: ALLOW
 }
 
@@ -119,7 +138,7 @@ rule ViewApprisalRO {
   participant (officer) : "org.army.Officer"
   operation: READ
   resource (a) : "org.army.Appraisal"
-  condition: (officer.OfficerId === a.ROId && a.status != 'APPROVED_AO')
+  condition: (officer.OfficerId === a.ROId)
   action: ALLOW
 }
 
@@ -129,7 +148,7 @@ rule ViewApprisalSRO {
   participant (officer) : "org.army.Officer"
   operation: READ
   resource (a) : "org.army.Appraisal"
-  condition: (officer.OfficerId === a.SROId && a.status != 'APPROVED_AO')
+  condition: (officer.OfficerId === a.SROId)
   action: ALLOW
 }
 
@@ -139,7 +158,7 @@ rule ViewApprisalAO {
   participant (officer) : "org.army.Officer"
   operation: READ
   resource (a) : "org.army.Appraisal"
-  condition: (officer.OfficerId === a.AOId && a.status != 'APPROVED_AO')
+  condition: (officer.OfficerId === a.AOId)
   action: ALLOW
 }
 
@@ -161,4 +180,52 @@ rule CreateApproveTransaction {
     resource(app): "org.army.Approve"
   	condition: ("one" == "one")
     action: ALLOW
+}
+
+rule CreateLeaveRecordAsset {
+  description: "Create the leave record of an officer"
+  participant(officer) : "org.army.Officer"
+  operation: CREATE
+  resource(res): "org.army.LeaveRecord"
+  transaction(tx): "org.army.MarkLeave"
+  condition: (officer.designation === 'CLERK')
+  action: ALLOW
+}
+
+rule CreateLeaveRecordTransaction {
+  description: "Transaction to create the leave record of an officer"
+  participant(officer) : "org.army.Officer"
+  operation: CREATE
+  resource(res): "org.army.MarkLeave"
+  condition: (officer.designation === 'CLERK')
+  action: ALLOW
+}
+
+rule ViewLeaveRecord {
+  description: "Transaction to create the leave record of an officer"
+  participant(officer) : "org.army.Officer"
+  operation: READ
+  resource(res): "org.army.LeaveRecord"
+  condition: (officer.designation === 'CLERK' || officer.OfficerId === res.officer.OfficerId)
+  action: ALLOW
+}
+
+rule CreateAttendanceRecord {
+  description: "Create Attendance Record for Officer"
+  participant(officer) : "org.army.Officer"
+  operation: CREATE
+  resource(res): "org.army.Attendance"
+  condition: (officer.designation === 'CLERK')
+  action: ALLOW
+}
+
+
+
+rule CreateAttendanceRecordTransaction {
+  description: "Create Transaction to create attendance record for Officer"
+  participant(officer) : "org.army.Officer"
+  operation: CREATE
+  resource(res): "org.hyperledger.composer.system.AddAsset"
+  condition: (officer.designation === 'CLERK')
+  action: ALLOW
 }
