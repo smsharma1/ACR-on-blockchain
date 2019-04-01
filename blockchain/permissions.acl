@@ -1,22 +1,86 @@
-/**
- * Sample access control list.
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-rule NetworkControlPermission {
-  description:  "Admin can access network commands"
-  participant: "org.army.Admin"
+rule NetworkAdminUser {
+  description: "Grant business network administrators full access to user resources"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
   operation: ALL
+  resource: "**"
+  action: ALLOW
+}
+
+rule NetworkAdminSystem {
+  description: "Grant business network administrators full access to system resources"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+rule NetworkControlPermission {
+  description:  "Any officer can access network commands"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: READ
   resource: "org.hyperledger.composer.system.Network"
   action: ALLOW
 }
 
-rule MarkAttendance {
-    description: "Allow the clerk to mark attendance of an officer"
-    participant (officer) : "org.army.Officer"
-    operation: ALL
-    resource: "org.army.Attendance"
-    condition: (officer.designation === 'CLERK')
-    action: ALLOW
+rule SystemACL {
+  description:  "System ACL to permit all access"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: READ
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+// create access of HistorianRecords to all the officers
+rule CreateHistorianRecord {
+  description:  "Any officer can create their designated transaction record"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: CREATE
+  resource: "org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW
+}
+
+// any officer can view their attendance
+rule ViewAttendance {
+  description: "Allow the clerk to mark attendance of an officer"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Attendance"
+  condition: (officer.OfficerId === a.OfficerId || officer.designation === 'CLERK')
+  action: ALLOW
+}
+
+// only clerk can mark the attendance of all officers
+rule CreateMarkAttendanceTransaction {
+  description: "Mark the attendance of an officer"
+  participant(officer) : "org.army.Officer"
+  operation: ALL
+  resource(res): "org.army.MarkAttendance"
+  condition: (officer.designation === 'CLERK')
+  action: ALLOW
+}
+
+// update attendance by cleark
+rule UpdateAttendance {
+  description: "Only clerk can update attendance"
+  participant(p): "org.army.Officer"
+  operation: UPDATE, READ
+  resource(r): "org.army.Attendance"
+  condition: (p.designation === 'CLERK')
+  action: ALLOW
 }
 
 // access to ratee
@@ -50,30 +114,3 @@ rule CreateApproveTransaction {
 }
 
 
-
-
-
-
-// rule SystemACL {
-//   description:  "System ACL to permit all access"
-//   participant: "org.hyperledger.composer.system.Participant"
-//   operation: ALL
-//   resource: "org.hyperledger.composer.system.**"
-//   action: ALLOW
-// }
-
-// rule NetworkAdminUser {
-//   description: "Grant business network administrators full access to user resources"
-//   participant: "org.hyperledger.composer.system.NetworkAdmin"
-//   operation: ALL
-//   resource: "**"
-//   action: ALLOW
-// }
-
-// rule NetworkAdminSystem {
-//   description: "Grant business network administrators full access to system resources"
-//   participant: "org.hyperledger.composer.system.NetworkAdmin"
-//   operation: ALL
-//   resource: "org.hyperledger.composer.system.**"
-//   action: ALLOW
-// }

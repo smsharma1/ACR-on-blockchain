@@ -69,17 +69,20 @@ transaction Reject {
   --> Officer newOfficer
 }
 
-transaction ViewStatus {
-  --> Appraisal appraisal
-  --> Officer officer
-}
-
 transaction MarkAttendance {
   --> Attendance attendance
   --> Officer officer
 }
 
-transaction ViewAttendance {
-  --> Attendance attendance
-  --> Officer officer
-}
+
+// not a transaction since no state will change, will address in query
+// transaction ViewStatus {
+//   --> Appraisal appraisal
+//   --> Officer officer
+// }
+
+// not a transaction since no state will change, will address in query
+// transaction ViewAttendance {
+//   --> Attendance attendance
+//   --> Officer officer
+// }
