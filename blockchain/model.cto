@@ -53,12 +53,6 @@ participant Officer identified by OfficerId {
   o String lastName
 }
 
-participant Admin identified by adminId {
-  o String adminId
-  o String firstName
-  o String lastName
-}
-
 transaction Approve {
   --> Appraisal appraisal
   --> Officer newOfficer

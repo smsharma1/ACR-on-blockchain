@@ -83,6 +83,66 @@ rule UpdateAttendance {
   action: ALLOW
 }
 
+// visibility of officers: any officer can see other offices name and designation within organisation
+rule OfficerVisibility{
+  	description: "Control visibility of officers"
+    participant(officer): "org.army.Officer"
+    operation: READ
+    resource(app): "org.army.Officer"
+  	condition: ("one" == "one")
+    action: ALLOW
+}
+
+// any ratee can view their apprisal
+rule ViewApprisalRatee {
+  description: "Allow ratee to read the apprisal"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Appraisal"
+  condition: ((officer.OfficerId === a.RateeId || officer.designation === 'CLERK'))
+  action: ALLOW
+}
+
+// IO can view apprisals under him
+rule ViewApprisalIO {
+  description: "Allow ratee to read the apprisal"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Appraisal"
+  condition: (officer.OfficerId === a.IOId && a.status != 'APPROVED_AO')
+  action: ALLOW
+}
+
+// RO can view apprisals under him
+rule ViewApprisalRO {
+  description: "Allow ratee to read the apprisal"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Appraisal"
+  condition: (officer.OfficerId === a.ROId && a.status != 'APPROVED_AO')
+  action: ALLOW
+}
+
+// SRO can view apprisals under him
+rule ViewApprisalSRO {
+  description: "Allow ratee to read the apprisal"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Appraisal"
+  condition: (officer.OfficerId === a.SROId && a.status != 'APPROVED_AO')
+  action: ALLOW
+}
+
+// AO can view apprisals under him
+rule ViewApprisalAO {
+  description: "Allow ratee to read the apprisal"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Appraisal"
+  condition: (officer.OfficerId === a.AOId && a.status != 'APPROVED_AO')
+  action: ALLOW
+}
+
 // access to ratee
 rule AppAccessOfficer {
     description: "Control access of apprisal"
@@ -94,16 +154,6 @@ rule AppAccessOfficer {
     action: ALLOW
 }
 
-// visibility of officers
-rule OfficerVisibility{
-  	description: "Control visibility of officers"
-    participant(officer): "org.army.Officer"
-    operation: READ
-    resource(app): "org.army.Officer"
-  	condition: ("one" == "one")
-    action: ALLOW
-}
-
 rule CreateApproveTransaction {
     description: "Control access of apprisal"
     participant(officer): "org.army.Officer"
@@ -112,5 +162,3 @@ rule CreateApproveTransaction {
   	condition: ("one" == "one")
     action: ALLOW
 }
-
-
