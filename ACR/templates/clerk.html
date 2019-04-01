@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Clerk{% endblock %}
+
+{% block content %}
+ <h2> Hi  "Clerk"!</h2>
+  <p><a href="{% url 'add_leave_record' %}">add leave record</a></p>
+  <p><a href="{% url 'add_appraisal' %}">add appraisal</a></p>
+  <p><a href="{% url 'logout' %}">logout</a></p>
+{% endblock %}

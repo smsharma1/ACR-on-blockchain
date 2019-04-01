@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import CustomUserCreationForm, Ratee_submit_appraisal_application
+from .forms import CustomUserCreationForm, Ratee_submit_appraisal_application, LeaveRecord, Appraisal
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.urls import reverse_lazy
@@ -12,14 +12,38 @@ class SignUp(generic.CreateView):
     template_name = 'signup.html'
 
 def submit_appraisal_application(request):
-    if request.method == 'POST':
-        return HttpResponse("Hello, world. You're at the polls index.")
+    if(request.user.user_type == 1):
+        if request.method == 'POST':
+            return HttpResponse("Hello, world. You're at the polls index.")
+        else:
+            form = Ratee_submit_appraisal_application()
+            return render(request,'form.html',{'form':form})
     else:
-        form = Ratee_submit_appraisal_application()
-        return render(request,'form.html',{'form':form})
+        return HttpResponse("Sorry you are not Ratee")
 
 def get_approved_application(self):
     return HttpResponse("Hello, world. You're at the polls index.") 
+
+def add_leave_record(request):
+    if(request.user.user_type == 7):
+        if request.method == 'POST':
+            return HttpResponse("Hello, world. You're at the polls index.")
+        else:
+            form = LeaveRecord()
+            return render(request,'form.html',{'form':form})
+    else:
+        return HttpResponse("Sorry you are not Clerk")
+
+def add_appraisal(request):
+    if(request.user.user_type == 7):
+        if request.method == 'POST':
+            return HttpResponse("Hello, world. You're at the polls index.")
+        else:
+            form = Appraisal()
+            return render(request,'form.html',{'form':form})
+    else:
+        return HttpResponse("Sorry you are not Clerk")
+
 
 def ratee_home():
     template = loader.get_template("ratee.html")
@@ -42,7 +66,9 @@ def Admin_home():
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def Clerk_home():
-    return HttpResponse("Hello, world. You're at the polls index.")
+    template = loader.get_template("clerk.html")
+    return HttpResponse(template.render())
+    # return HttpResponse("Hello, world. You're at the polls index.")
 
 def home(request):
     # if request.user.is_authenticated():

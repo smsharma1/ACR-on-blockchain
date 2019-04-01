@@ -17,4 +17,11 @@
       <input class="btn btn-primary" type="submit" value="Submit" />
     </div>
   </form>
+  <script>
+        $(function () {
+            $('.datetime-input').datetimepicker({
+                format:'YYYY-MM-DD HH:mm:ss'
+            });
+        });
+    </script>
   {% endblock %}
