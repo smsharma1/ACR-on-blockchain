@@ -55,13 +55,9 @@ async function MarkAttendance(trans) {
     var now = new Date()
     // to compare current date with today's date
     // avoid double attendance
-    console.log(now)
     nowDate = now.setHours(0,0,0,0)
-    console.log(nowDate)
     lastDate = new Date(trans.attendance.currentdate)
-    console.log(lastDate)
     lastDate = lastDate.setHours(0,0.0,0)
-    console.log(lastDate)
     if (lastDate < nowDate) {
         trans.attendance.attendance += 1
         trans.attendance.currentdate = now
@@ -81,14 +77,22 @@ async function MarkAttendance(trans) {
  */
 async function MarkLeave(trans) {
     var now = new Date()
-    // need to stop backdate leaves
-    if ((trans.to > trans.from) && (trans.from > now.toDateString())) {        
-        let assetRegistry = await getAssetRegistry('org.army.LeaveRecord');
-        await assetRegistry.update(trans.leave);
+    nowDate = now.setHours(0,0,0,0)
+    fromDate = new Date(trans.leave.from)
+    fromDate = fromDate.setHours(0,0,0,0)
+    toDate = new Date(trans.leave.to)
+    toDate = toDate.setHours(0,0,0,0)
+
+    // need to stop backdate leaves, reject the backdate leaves
+    // assumption is that clerk approves the leave just after application received from officer
+    if ((toDate > fromDate) && (fromDate > nowDate) && (trans.leave.status != 'REJECTED')) {
+        trans.leave.status = 'APPROVED'        
     }
     else{
-        throw new Error("Invalid transaction");
+        trans.leave.status = 'REJECTED'
     }
+    let assetRegistry = await getAssetRegistry('org.army.LeaveRecord');
+    await assetRegistry.update(trans.leave);
 }
 
 

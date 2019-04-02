@@ -14,6 +14,12 @@ enum AppraisalStatus{
   o APPROVED_AO
 }
 
+enum LeaveStatus{
+  o PENDING
+  o REJECTED
+  o APPROVED 
+}
+
 enum OfficerDesignation{
   o CLERK
   o RATEE
@@ -36,6 +42,7 @@ asset Appraisal identified by AppID {
   --> Officer officer
 }
 
+// currently clerk can create attendance record for any random id, who may not be an officer
 asset Attendance identified by OfficerId {
   o String OfficerId
   o String ClerkId
@@ -47,6 +54,7 @@ asset LeaveRecord identified by leaveId {
   o String leaveId //This leaveId is to be stored in database for reference
   o DateTime from
   o DateTime to
+  o LeaveStatus status
   --> Officer officer
 }
 
@@ -64,7 +72,6 @@ transaction Approve {
 
 transaction MarkAttendance {
   --> Attendance attendance
-  --> Officer officer //Not Required
 }
 
 transaction MarkLeave {

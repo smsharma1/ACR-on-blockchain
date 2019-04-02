@@ -1,22 +1,81 @@
 {
-  "$class": "org.army.Appraisal",
-  "AppID": "0001",
-  "description": "ratee one",
-  "status": "NONE",
-  "RateeId": "0101",
-  "IOId": "0201",
-  "ROId": "0301",
-  "SROId": "0401",
-  "AOId": "0501",
-  "ClerkId": "0001",
-  "officer": "resource:org.army.Officer#0101"
+  "$class": "org.army.Officer",
+  "OfficerId": "001",
+  "designation": "CLERK",
+  "firstName": "",
+  "lastName": ""
 }
 
+{
+  "$class": "org.army.Officer",
+  "OfficerId": "101",
+  "designation": "RATEE",
+  "firstName": "",
+  "lastName": ""
+}
 
 {
+  "$class": "org.army.Officer",
+  "OfficerId": "201",
+  "designation": "IO",
+  "firstName": "",
+  "lastName": ""
+}
+
+{
+  "$class": "org.army.Officer",
+  "OfficerId": "301",
+  "designation": "RO",
+  "firstName": "",
+  "lastName": ""
+}
+
+{
+  "$class": "org.army.Officer",
+  "OfficerId": "401",
+  "designation": "SRO",
+  "firstName": "",
+  "lastName": ""
+}
+
+{
+  "$class": "org.army.Officer",
+  "OfficerId": "501",
+  "designation": "AO",
+  "firstName": "",
+  "lastName": ""
+}
+
+// appprisal
+{
+  "$class": "org.army.Appraisal",
+  "AppID": "001",
+  "description": "ratee one",
+  "status": "NONE",
+  "RateeId": "101",
+  "IOId": "201",
+  "ROId": "301",
+  "SROId": "401",
+  "AOId": "501",
+  "ClerkId": "001",
+  "officer": "resource:org.army.Officer#101"
+}
+
+// attendance
+{
     "$class": "org.army.Attendance",
-    "OfficerId": "0101",
-    "ClerkId": "0001",
+    "OfficerId": "101",
+    "ClerkId": "001",
     "attendance": 0,
-    "currentdate": "2019-03-31T19:42:39.096Z"
-  }
+    "currentdate": "2000-03-31T19:42:39.096Z"
+}
+
+// leave record
+{
+  "$class": "org.army.LeaveRecord",
+  "leaveId": "8936",
+  "from": "2019-03-02T10:52:32.104Z",
+  "to": "2019-05-02T10:52:32.104Z",
+  "status": "REJECTED",
+  "officer": "resource:org.army.Officer#101"
+}

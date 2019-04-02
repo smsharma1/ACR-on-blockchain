@@ -71,6 +71,7 @@ rule CreateHistorianRecord {
   action: ALLOW
 }
 
+// marking and viewing attnedance
 // any officer can view their attendance
 rule ViewAttendance {
   description: "Allow the clerk to mark attendance of an officer"
@@ -99,6 +100,15 @@ rule UpdateAttendance {
   resource(r): "org.army.Attendance"
   transaction(tx): "org.army.MarkAttendance"
   condition: (p.designation === 'CLERK' && p.OfficerId === r.ClerkId)
+  action: ALLOW
+}
+
+rule CreateAttendanceRecord {
+  description: "Create Attendance Record for Officer"
+  participant(officer) : "org.army.Officer"
+  operation: CREATE
+  resource(res): "org.army.Attendance"
+  condition: (officer.designation === 'CLERK')
   action: ALLOW
 }
 
@@ -185,9 +195,8 @@ rule CreateApproveTransaction {
 rule CreateLeaveRecordAsset {
   description: "Create the leave record of an officer"
   participant(officer) : "org.army.Officer"
-  operation: CREATE
+  operation: CREATE, UPDATE
   resource(res): "org.army.LeaveRecord"
-  transaction(tx): "org.army.MarkLeave"
   condition: (officer.designation === 'CLERK')
   action: ALLOW
 }
@@ -210,22 +219,15 @@ rule ViewLeaveRecord {
   action: ALLOW
 }
 
-rule CreateAttendanceRecord {
-  description: "Create Attendance Record for Officer"
-  participant(officer) : "org.army.Officer"
-  operation: CREATE
-  resource(res): "org.army.Attendance"
-  condition: (officer.designation === 'CLERK')
-  action: ALLOW
-}
 
 
+// leave Record
 
-rule CreateAttendanceRecordTransaction {
-  description: "Create Transaction to create attendance record for Officer"
-  participant(officer) : "org.army.Officer"
-  operation: CREATE
-  resource(res): "org.hyperledger.composer.system.AddAsset"
-  condition: (officer.designation === 'CLERK')
-  action: ALLOW
-}
+// rule CreateAttendanceRecordTransaction {
+//   description: "Create Transaction to create attendance record for Officer"
+//   participant(officer) : "org.army.Officer"
+//   operation: CREATE
+//   resource(res): "org.hyperledger.composer.system.AddAsset"
+//   condition: (officer.designation === 'CLERK')
+//   action: ALLOW
+// }
