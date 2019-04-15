@@ -31,7 +31,11 @@ enum OfficerDesignation{
 
 asset Appraisal identified by AppID {
   o String AppID
-  o String description
+  o String remarkRatee
+  o String remarkIO
+  o String remarkRO
+  o String remarkSRO
+  o String remarkAO
   o AppraisalStatus status
   o String RateeId
   o String IOId
@@ -66,6 +70,7 @@ participant Officer identified by OfficerId {
 }
 
 transaction Approve {
+  o String remark
   --> Appraisal appraisal
   --> Officer newOfficer
 }

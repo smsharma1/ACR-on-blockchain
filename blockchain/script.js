@@ -8,11 +8,13 @@ async function Approve(trans) {
     if (trans.appraisal.status === 'NONE' && trans.appraisal.IOId === trans.newOfficer.OfficerId){
         trans.appraisal.officer = trans.newOfficer
         trans.appraisal.status = 'INITIATED'
+        trans.appraisal.remarkRatee = trans.remark
         flag = 1
     }
     else if (trans.appraisal.status === 'INITIATED' && trans.appraisal.RateeId === trans.newOfficer.OfficerId){
         trans.appraisal.officer = trans.newOfficer
         trans.appraisal.status = 'APPROVED_IO'
+        trans.appraisal.remarkIO = trans.remark
         flag = 1
     } 
     else if (trans.appraisal.status === 'APPROVED_IO' && trans.appraisal.ROId === trans.newOfficer.OfficerId){
@@ -23,16 +25,19 @@ async function Approve(trans) {
     else if (trans.appraisal.status === 'REAPPROVED_RATEE' && trans.appraisal.SROId === trans.newOfficer.OfficerId){
         trans.appraisal.officer = trans.newOfficer
         trans.appraisal.status = 'APPROVED_RO'
+        trans.appraisal.remarkRO = trans.remark
         flag = 1
     }
     else if (trans.appraisal.status === 'APPROVED_RO' && trans.appraisal.AOId === trans.newOfficer.OfficerId){
         trans.appraisal.officer = trans.newOfficer
         trans.appraisal.status = 'APPROVED_SRO'
+        trans.appraisal.remarkSRO = trans.remark
         flag = 1
     }
     else if (trans.appraisal.status === 'APPROVED_SRO'){
         trans.appraisal.officer = trans.newOfficer
         trans.appraisal.status = 'APPROVED_AO'
+        trans.appraisal.remarkAO = trans.remark
         flag = 1
     }
 

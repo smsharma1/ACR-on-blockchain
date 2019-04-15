@@ -50,7 +50,11 @@
 {
   "$class": "org.army.Appraisal",
   "AppID": "001",
-  "description": "ratee one",
+  "remarkRatee": "",
+  "remarkIO": "",
+  "remarkRO": "",
+  "remarkSRO": "",
+  "remarkAO": "",
   "status": "NONE",
   "RateeId": "101",
   "IOId": "201",
