@@ -25,6 +25,7 @@ class CustomUser(AbstractUser):
         return self.email
 
 class Appraisal(models.Model):
+    AppID = models.AutoField(primary_key=True,default=1)
     RateeID = models.IntegerField(default=1)
     IOID = models.IntegerField(default=2)
     ROID = models.IntegerField(default=3)

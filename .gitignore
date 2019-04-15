@@ -1,2 +1,3 @@
 ACR/ACRBlockchain/migrations/*
 ACR/ACR/__pycache__/*
+*.pyc

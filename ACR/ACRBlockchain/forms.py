@@ -1,4 +1,5 @@
 from django import forms
+from django.db import models
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser, LeaveRecord, Appraisal
 from django.contrib.admin.widgets import AdminDateWidget
@@ -48,3 +49,6 @@ class Appraisal(forms.ModelForm):
     class Meta:
         model = Appraisal
         fields = ('RateeID','IOID','ROID','SROID','AOID','ClerkID')
+
+class MarkAttendance(forms.Form):
+    OfficerID = forms.IntegerField()
