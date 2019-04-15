@@ -33,7 +33,11 @@ class Appraisal(models.Model):
     AOID = models.IntegerField(default=5)
     ClerkID = models.IntegerField(default=7)
 
-class LeaveRecord(models.Model):
+class LeaveRecord(models.Model):    
     OfficerID = models.IntegerField(default=1)
     From = models.DateField(default=date.today)
     To = models.DateField(default=date.today)
+
+class Card(models.Model):
+    OfficerID = models.IntegerField(default=1)
+    document = models.FileField()

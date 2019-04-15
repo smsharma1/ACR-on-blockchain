@@ -10,6 +10,7 @@ urlpatterns = [
     path('add_appraisal',views.add_appraisal,name='add_appraisal'),
     path('mark_attendance',views.mark_attendance,name='mark_attendance'),
     path('get_approved_application',views.get_approved_application,name='get_approved_application'),
+    path('card_upload',views.card_upload,name='card_upload'),
     path('signup/', views.SignUp.as_view(), name='signup'),
     # path('signup/', views.SignUp.as_view(), name='signup'),
 ]

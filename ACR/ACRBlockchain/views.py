@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import CustomUserCreationForm, Ratee_submit_appraisal_application, LeaveRecord, Appraisal, MarkAttendance
+from .forms import CardForm, CustomUserCreationForm, Ratee_submit_appraisal_application, LeaveRecord, Appraisal, MarkAttendance
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.urls import reverse_lazy
@@ -12,6 +12,26 @@ class SignUp(generic.CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
+
+
+def card_upload(request):
+    if request.method == 'POST':
+        form = CardForm(request.POST, request.FILES)
+        if form.is_valid():
+            url = 'http://172.27.20.177:3000/api/wallet/import'
+            r = ''
+            print("Files", request.FILES.get('document'))
+            r = requests.post(url, files={'temp.card': request.FILES.get('document')})
+            if r.status_code != 200:
+                print(r.content, "error on transaction")
+                return HttpResponse(str(r.status_code) + "error on transaction")
+            else:
+                newformobject = form.save()
+                return HttpResponse("card imported successfully")
+    else:
+        form = CardForm()
+    return render(request, 'form.html',{'form':form})
+
 
 def submit_appraisal_application(request):
     if(request.user.user_type == 1):
