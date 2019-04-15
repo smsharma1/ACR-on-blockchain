@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import CardForm, CustomUserCreationForm, Ratee_submit_appraisal_application, LeaveRecord, Appraisal, MarkAttendance
+from .forms import AuthToken, CardForm, CustomUserCreationForm, Ratee_submit_appraisal_application, LeaveRecord, Appraisal, MarkAttendance
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.urls import reverse_lazy
@@ -13,14 +13,23 @@ class SignUp(generic.CreateView):
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
 
+def authtoken_upload(request):
+    if request.method == 'POST':
+        form = AuthToken(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("Token saved sucessfully")
+    else:
+        form = AuthToken()
+        return render(request, 'form.html',{'form':form})
+
 
 def card_upload(request):
     if request.method == 'POST':
         form = CardForm(request.POST, request.FILES)
         if form.is_valid():
+            # token = AuthToken.objects.all().filter(pub_date__year=2006)
             url = 'http://172.27.20.177:3000/api/wallet/import'
-            r = ''
-            print("Files", request.FILES.get('document'))
             r = requests.post(url, files={'temp.card': request.FILES.get('document')})
             if r.status_code != 200:
                 print(r.content, "error on transaction")
@@ -30,7 +39,7 @@ def card_upload(request):
                 return HttpResponse("card imported successfully")
     else:
         form = CardForm()
-    return render(request, 'form.html',{'form':form})
+        return render(request, 'form.html',{'form':form})
 
 
 def submit_appraisal_application(request):

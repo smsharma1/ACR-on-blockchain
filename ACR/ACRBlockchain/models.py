@@ -41,3 +41,7 @@ class LeaveRecord(models.Model):
 class Card(models.Model):
     OfficerID = models.IntegerField(default=1)
     document = models.FileField()
+
+class AuthToken(models.Model):
+    OfficerID = models.IntegerField(default=1)
+    document = models.CharField()
