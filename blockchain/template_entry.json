@@ -2,59 +2,59 @@
   "$class": "org.army.Officer",
   "OfficerId": "001",
   "designation": "CLERK",
-  "firstName": "",
-  "lastName": ""
+  "firstName": "abc",
+  "lastName": "abc"
 }
 
 {
   "$class": "org.army.Officer",
   "OfficerId": "101",
   "designation": "RATEE",
-  "firstName": "",
-  "lastName": ""
+  "firstName": "abc",
+  "lastName": "abc"
 }
 
 {
   "$class": "org.army.Officer",
   "OfficerId": "201",
   "designation": "IO",
-  "firstName": "",
-  "lastName": ""
+  "firstName": "abc",
+  "lastName": "abc"
 }
 
 {
   "$class": "org.army.Officer",
   "OfficerId": "301",
   "designation": "RO",
-  "firstName": "",
-  "lastName": ""
+  "firstName": "abc",
+  "lastName": "abc"
 }
 
 {
   "$class": "org.army.Officer",
   "OfficerId": "401",
   "designation": "SRO",
-  "firstName": "",
-  "lastName": ""
+  "firstName": "abc",
+  "lastName": "abc"
 }
 
 {
   "$class": "org.army.Officer",
   "OfficerId": "501",
   "designation": "AO",
-  "firstName": "",
-  "lastName": ""
+  "firstName": "abc",
+  "lastName": "abc"
 }
 
 // appprisal
 {
   "$class": "org.army.Appraisal",
   "AppID": "001",
-  "remarkRatee": "",
-  "remarkIO": "",
-  "remarkRO": "",
-  "remarkSRO": "",
-  "remarkAO": "",
+  "remarkRatee": "NONE",
+  "remarkIO": "NONE",
+  "remarkRO": "NONE",
+  "remarkSRO": "NONE",
+  "remarkAO": "NONE",
   "status": "NONE",
   "RateeId": "101",
   "IOId": "201",
@@ -77,9 +77,9 @@
 // leave record
 {
   "$class": "org.army.LeaveRecord",
-  "leaveId": "8936",
-  "from": "2019-03-02T10:52:32.104Z",
-  "to": "2019-05-02T10:52:32.104Z",
-  "status": "REJECTED",
+  "leaveId": "001",
+  "from": "2019-05-02T10:52:32.104Z",
+  "to": "2019-06-02T10:52:32.104Z",
+  "status": "PENDING",
   "officer": "resource:org.army.Officer#101"
 }
