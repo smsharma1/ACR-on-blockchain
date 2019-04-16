@@ -1,0 +1,232 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+rule NetworkAdminUser {
+  description: "Grant business network administrators full access to user resources"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: ALL
+  resource: "**"
+  action: ALLOW
+}
+
+rule NetworkAdminSystem {
+  description: "Grant business network administrators full access to system resources"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+rule NetworkControlPermission {
+  description:  "Any officer can access network commands"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: READ
+  resource: "org.hyperledger.composer.system.Network"
+  action: ALLOW
+}
+
+rule SystemACL {
+  description:  "System ACL to permit all access"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: READ
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+rule ClerkAddAppraisal {
+  description:  "System ACL to permit all access"
+  participant(p): "org.army.Officer"
+  operation: CREATE
+  resource(r): "org.hyperledger.composer.system.AddAsset"
+  condition: (p.designation === "CLERK")
+  action: ALLOW
+}
+
+rule ClerkAddAppraisalTransaction {
+  description:  "System ACL to permit all access"
+  participant(p): "org.army.Officer"
+  operation: CREATE
+  resource(r): "org.army.Appraisal"
+  condition: (p.designation === "CLERK")
+  action: ALLOW
+}
+
+// create access of HistorianRecords to all the officers
+rule CreateHistorianRecord {
+  description:  "Any officer can create their designated transaction record"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: CREATE
+  resource: "org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW
+}
+
+// marking and viewing attnedance
+// any officer can view their attendance
+rule ViewAttendance {
+  description: "Allow the clerk to mark attendance of an officer"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Attendance"
+  condition: (officer.OfficerId === a.OfficerId || officer.designation === 'CLERK')
+  action: ALLOW
+}
+
+// only clerk can mark the attendance of all officers
+rule CreateMarkAttendanceTransaction {
+  description: "Mark the attendance of an officer"
+  participant(officer) : "org.army.Officer"
+  operation: ALL
+  resource(res): "org.army.MarkAttendance"
+  condition: (officer.designation === 'CLERK')
+  action: ALLOW
+}
+
+// update attendance by clerk
+rule UpdateAttendance {
+  description: "Only clerk can update attendance"
+  participant(p): "org.army.Officer"
+  operation: UPDATE, READ
+  resource(r): "org.army.Attendance"
+  transaction(tx): "org.army.MarkAttendance"
+  condition: (p.designation === 'CLERK' && p.OfficerId === r.ClerkId)
+  action: ALLOW
+}
+
+rule CreateAttendanceRecord {
+  description: "Create Attendance Record for Officer"
+  participant(officer) : "org.army.Officer"
+  operation: CREATE
+  resource(res): "org.army.Attendance"
+  condition: (officer.designation === 'CLERK')
+  action: ALLOW
+}
+
+// visibility of officers: any officer can see other offices name and designation within organisation
+rule OfficerVisibility{
+  	description: "Control visibility of officers"
+    participant(officer): "org.army.Officer"
+    operation: READ
+    resource(app): "org.army.Officer"
+  	condition: ("one" == "one")
+    action: ALLOW
+}
+
+// any ratee can view their apprisal
+rule ViewApprisalRatee {
+  description: "Allow ratee to read the apprisal"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Appraisal"
+  condition: ((officer.OfficerId === a.RateeId || officer.designation === 'CLERK'))
+  action: ALLOW
+}
+
+// IO can view apprisals under him
+rule ViewApprisalIO {
+  description: "Allow ratee to read the apprisal"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Appraisal"
+  condition: (officer.OfficerId === a.IOId)
+  action: ALLOW
+}
+
+// RO can view apprisals under him
+rule ViewApprisalRO {
+  description: "Allow ratee to read the apprisal"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Appraisal"
+  condition: (officer.OfficerId === a.ROId)
+  action: ALLOW
+}
+
+// SRO can view apprisals under him
+rule ViewApprisalSRO {
+  description: "Allow ratee to read the apprisal"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Appraisal"
+  condition: (officer.OfficerId === a.SROId)
+  action: ALLOW
+}
+
+// AO can view apprisals under him
+rule ViewApprisalAO {
+  description: "Allow ratee to read the apprisal"
+  participant (officer) : "org.army.Officer"
+  operation: READ
+  resource (a) : "org.army.Appraisal"
+  condition: (officer.OfficerId === a.AOId)
+  action: ALLOW
+}
+
+// access to ratee
+rule AppAccessOfficer {
+    description: "Control access of apprisal"
+    participant(officer): "org.army.Officer"
+    operation: READ, CREATE, UPDATE
+    resource(app): "org.army.Appraisal"
+    transaction(tx): "org.army.Approve"
+    condition: (app.officer.OfficerId === officer.OfficerId)
+    action: ALLOW
+}
+
+rule CreateApproveTransaction {
+    description: "Control access of apprisal"
+    participant(officer): "org.army.Officer"
+    operation: CREATE
+    resource(app): "org.army.Approve"
+  	condition: ("one" == "one")
+    action: ALLOW
+}
+
+rule CreateLeaveRecordAsset {
+  description: "Create the leave record of an officer"
+  participant(officer) : "org.army.Officer"
+  operation: CREATE, UPDATE
+  resource(res): "org.army.LeaveRecord"
+  condition: (officer.designation === 'CLERK')
+  action: ALLOW
+}
+
+rule CreateLeaveRecordTransaction {
+  description: "Transaction to create the leave record of an officer"
+  participant(officer) : "org.army.Officer"
+  operation: CREATE
+  resource(res): "org.army.MarkLeave"
+  condition: (officer.designation === 'CLERK')
+  action: ALLOW
+}
+
+rule ViewLeaveRecord {
+  description: "Transaction to create the leave record of an officer"
+  participant(officer) : "org.army.Officer"
+  operation: READ
+  resource(res): "org.army.LeaveRecord"
+  condition: (officer.designation === 'CLERK' || officer.OfficerId === res.officer.OfficerId)
+  action: ALLOW
+}
+
+
+// leave Record
+
+// rule CreateAttendanceRecordTransaction {
+//   description: "Create Transaction to create attendance record for Officer"
+//   participant(officer) : "org.army.Officer"
+//   operation: CREATE
+//   resource(res): "org.hyperledger.composer.system.AddAsset"
+//   condition: (officer.designation === 'CLERK')
+//   action: ALLOW
+// }
