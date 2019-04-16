@@ -25,6 +25,7 @@ class CustomUser(AbstractUser):
         return self.email
 
 class Appraisal(models.Model):
+    AppID = models.AutoField(primary_key=True,default=1)
     RateeID = models.IntegerField(default=1)
     IOID = models.IntegerField(default=2)
     ROID = models.IntegerField(default=3)
@@ -32,7 +33,15 @@ class Appraisal(models.Model):
     AOID = models.IntegerField(default=5)
     ClerkID = models.IntegerField(default=7)
 
-class LeaveRecord(models.Model):
+class LeaveRecord(models.Model):    
     OfficerID = models.IntegerField(default=1)
     From = models.DateField(default=date.today)
     To = models.DateField(default=date.today)
+
+class Card(models.Model):
+    OfficerID = models.IntegerField(default=1)
+    document = models.FileField()
+
+class AuthToken(models.Model):
+    OfficerID = models.IntegerField(default=1)
+    document = models.CharField()

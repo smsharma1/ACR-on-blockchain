@@ -123,3 +123,5 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'ACRBlockchain.CustomUser'
 LOGIN_REDIRECT_URL = '/acrblockchain/home'
 LOGOUT_REDIRECT_URL = 'home'
+MEDIA_URL = '/temp/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'temp/')

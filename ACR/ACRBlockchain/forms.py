@@ -1,6 +1,8 @@
 from django import forms
+from django.db import models
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser, LeaveRecord, Appraisal
+from .models import Card, AuthToken
 from django.contrib.admin.widgets import AdminDateWidget
 
 class CustomUserCreationForm(UserCreationForm):
@@ -48,3 +50,17 @@ class Appraisal(forms.ModelForm):
     class Meta:
         model = Appraisal
         fields = ('RateeID','IOID','ROID','SROID','AOID','ClerkID')
+
+class MarkAttendance(forms.Form):
+    OfficerID = forms.IntegerField()
+
+class AuthToken(forms.ModelForm):
+    class Meta:
+        model = AuthToken    
+        fields = ('OfficerID','AuthToken')
+
+
+class CardForm(forms.ModelForm):
+    class Meta:
+        model = Card
+        fields = ('OfficerID','document',)
