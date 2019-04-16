@@ -45,3 +45,4 @@ class Card(models.Model):
 class AuthToken(models.Model):
     OfficerID = models.IntegerField(default=1)
     document = models.CharField()
+    name = models.CharField(max_length=500, default="abc")

@@ -30,7 +30,13 @@ def card_upload(request):
         if form.is_valid():
             # token = AuthToken.objects.all().filter(pub_date__year=2006)
             url = 'http://172.27.20.177:3000/api/wallet/import'
-            r = requests.post(url, files={'temp.card': request.FILES.get('document')})
+            headers = {'Content-Type' : 'multipart/form-data', 'Accept': 'application/json', 'X-Access-Token': 'V7MitQgmc8hGnOaYTm2E5CS46wsgyG6NhVsBM7WZo9l2YSCHqAL62Os4Yqr4prkx'}
+            # r = ''
+            # print("Files", request.FILES.get('document'))
+            payload = {
+                "name": str(request.POST.get('name')),
+                }
+            r = requests.post(url, files={request.POST.get('name'): request.FILES.get('document')}, headers=headers)
             if r.status_code != 200:
                 print(r.content, "error on transaction")
                 return HttpResponse(str(r.status_code) + "error on transaction")

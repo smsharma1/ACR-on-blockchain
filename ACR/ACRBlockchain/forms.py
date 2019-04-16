@@ -63,4 +63,4 @@ class AuthToken(forms.ModelForm):
 class CardForm(forms.ModelForm):
     class Meta:
         model = Card
-        fields = ('OfficerID','document',)
+        fields = ('OfficerID','name','document',)
